@@ -57,43 +57,51 @@
 </div>
 
 <script>
-    // Example products — later you can auto-generate JSON
-    const PRODUCTS = {
-        1: { name: "Hudi Sonyakhy", price: 1200 },
-        2: { name: "Hairpin Mak", price: 250 },
-        3: { name: "Tshirt Kolo", price: 750 },
-        4: { name: "Corset Black", price: 1800 }
-    };
+let PRODUCTS = {};
 
-    function getIdsFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        const ids = params.get("ids");
-        if (!ids) return [];
-        return ids.split(",").map(n => parseInt(n));
-    }
+// Load JSON file from /cart/products.json
+fetch("products.json")
+    .then(response => response.json())
+    .then(data => {
+        PRODUCTS = data;
+        renderCart();
+    });
 
+function renderCart() {
     const ids = getIdsFromUrl();
     const cartDiv = document.getElementById("cart");
     const totalDiv = document.getElementById("total");
 
     if (!ids.length) {
         cartDiv.innerHTML = "<p>Your cart is empty.</p>";
-    } else {
-        let total = 0;
-        ids.forEach(id => {
-            const item = PRODUCTS[id];
-            if (item) {
-                cartDiv.innerHTML += `
-                    <div class="item">
-                        <strong>${item.name}</strong><br>
-                        ${item.price} UAH
-                    </div>
-                `;
-                total += item.price;
-            }
-        });
-        totalDiv.innerHTML = "Total: " + total + " UAH";
+        return;
     }
+
+    let total = 0;
+    cartDiv.innerHTML = "";
+
+    ids.forEach(id => {
+        const item = PRODUCTS[id];
+        if (item) {
+            cartDiv.innerHTML += `
+                <div class="item">
+                    <strong>${item.name}</strong><br>
+                    ${item.price} UAH
+                </div>
+            `;
+            total += item.price;
+        }
+    });
+
+    totalDiv.innerHTML = "Total: " + total + " UAH";
+}
+
+function getIdsFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const ids = params.get("ids");
+    if (!ids) return [];
+    return ids.split(",").map(n => parseInt(n));
+}
 </script>
 
 </body>
