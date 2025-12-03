@@ -307,10 +307,8 @@ async def show_cart(message: types.Message):
 
     await message.answer(
         "\n".join(lines),
-        parse_mode="Markdown",
         reply_markup=cart_menu()
     )
-
 
 # =========================
 #      ОФОРМЛЕННЯ ЗАМОВЛЕННЯ

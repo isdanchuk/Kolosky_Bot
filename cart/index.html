@@ -1,70 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Kolo.sky — Cart</title>
+    <title>Kolo.sky — Кошик</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Шрифт у стилі Figma -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #faf7ff;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background: #f8d2c4; /* Персиковий фон */
+            font-family: 'Playfair Display', serif;
         }
+
+        .logo {
+            padding: 25px;
+            font-size: 42px;
+            font-weight: 600;
+            color: #063a4b;
+        }
+
         .container {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 40px;
+            background: #fce2d7; /* світліший персиковий */
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
+
         h1 {
+            background: #063a4b;
+            color: white;
+            padding: 12px 0;
+            border-radius: 12px;
             text-align: center;
+            font-size: 28px;
+            margin-top: 0;
         }
+
         .item {
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #ddd;
             padding: 15px 0;
-        }
-        .total {
-            font-weight: bold;
             font-size: 20px;
-            margin-top: 15px;
         }
+
+        .total {
+            margin-top: 25px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #063a4b;
+        }
+
         .btn {
             display: block;
-            width: 100%;
+            width: 260px;
             text-align: center;
-            padding: 14px;
-            margin-top: 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            text-decoration: none;
+            padding: 12px;
+            margin: 15px auto;
+            background: #063a4b;
             color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.2s;
         }
-        .tg { background: #249bd7; }
-        .ig { background: #d6249f; }
+
+        .btn:hover {
+            background: #0b5168;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Your Cart</h1>
-    <div id="cart"></div>
-    <div class="total" id="total"></div>
+<div class="logo">Kolo.sky</div>
 
-    <a class="btn tg" href="https://t.me/kolo_sky_admin" target="_blank">Order in Telegram</a>
-    <a class="btn ig" href="https://instagram.com/kolo.sky" target="_blank">Order in Instagram</a>
+<div class="container">
+    <h1>Кошик</h1>
+
+    <div id="cart"></div>
+    <div id="total" class="total"></div>
+
+    <a class="btn" href="https://t.me/kolo_sky_admin" target="_blank">Замовити в Telegram</a>
+    <a class="btn" href="https://instagram.com/kolo.sky" target="_blank">Замовити в Instagram</a>
 </div>
 
 <script>
 let PRODUCTS = {};
 
-// Load JSON file from /cart/products.json
+// Отримати id з URL
+function getIdsFromUrl() {
+    const query = new URLSearchParams(window.location.search);
+    const ids = query.get("ids");
+    if (!ids) return [];
+    return ids.split(",").map(n => parseInt(n));
+}
+
+// Завантажуємо JSON
 fetch("products.json")
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         PRODUCTS = data;
         renderCart();
+    })
+    .catch(() => {
+        document.getElementById("cart").innerHTML = "<p>Помилка завантаження даних.</p>";
     });
 
 function renderCart() {
@@ -73,7 +116,8 @@ function renderCart() {
     const totalDiv = document.getElementById("total");
 
     if (!ids.length) {
-        cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+        cartDiv.innerHTML = "<p>Кошик порожній.</p>";
+        totalDiv.innerHTML = "";
         return;
     }
 
@@ -86,21 +130,14 @@ function renderCart() {
             cartDiv.innerHTML += `
                 <div class="item">
                     <strong>${item.name}</strong><br>
-                    ${item.price} UAH
+                    ${item.price} грн
                 </div>
             `;
             total += item.price;
         }
     });
 
-    totalDiv.innerHTML = "Total: " + total + " UAH";
-}
-
-function getIdsFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const ids = params.get("ids");
-    if (!ids) return [];
-    return ids.split(",").map(n => parseInt(n));
+    totalDiv.innerHTML = `Сума: ${total} грн`;
 }
 </script>
 
