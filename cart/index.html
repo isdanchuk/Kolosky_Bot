@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kolo.sky — Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #faf7ff;
+            padding: 20px;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+        }
+        .item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 15px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            text-decoration: none;
+            color: white;
+        }
+        .tg { background: #249bd7; }
+        .ig { background: #d6249f; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Your Cart</h1>
+    <div id="cart"></div>
+    <div class="total" id="total"></div>
+
+    <a class="btn tg" href="https://t.me/kolo_sky_admin" target="_blank">Order in Telegram</a>
+    <a class="btn ig" href="https://instagram.com/kolo.sky" target="_blank">Order in Instagram</a>
+</div>
+
+<script>
+    // Example products — later you can auto-generate JSON
+    const PRODUCTS = {
+        1: { name: "Hudi Sonyakhy", price: 1200 },
+        2: { name: "Hairpin Mak", price: 250 },
+        3: { name: "Tshirt Kolo", price: 750 },
+        4: { name: "Corset Black", price: 1800 }
+    };
+
+    function getIdsFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const ids = params.get("ids");
+        if (!ids) return [];
+        return ids.split(",").map(n => parseInt(n));
+    }
+
+    const ids = getIdsFromUrl();
+    const cartDiv = document.getElementById("cart");
+    const totalDiv = document.getElementById("total");
+
+    if (!ids.length) {
+        cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+        let total = 0;
+        ids.forEach(id => {
+            const item = PRODUCTS[id];
+            if (item) {
+                cartDiv.innerHTML += `
+                    <div class="item">
+                        <strong>${item.name}</strong><br>
+                        ${item.price} UAH
+                    </div>
+                `;
+                total += item.price;
+            }
+        });
+        totalDiv.innerHTML = "Total: " + total + " UAH";
+    }
+</script>
+
+</body>
+</html>
